@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEXIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/assets/css/style.css">
+    <!-- Adicionar biblioteca Supabase via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <button id="toggle-sidebar" class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1><span class="green-text">FEX</span>IA</h1>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <img src="public/assets/images/avatar.svg" alt="Avatar">
+                </div>
+                <div class="user-details">
+                    <div class="username">Usuário</div>
+                    <div id="token-info" class="token-info">
+                        <div class="token-plan">Basic</div>
+                        <div class="token-count">0 / 10,000</div>
+                        <div class="token-progress">
+                            <div class="token-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-actions">
+                <button id="new-chat-btn" class="action-btn">
+                    <i class="fas fa-plus"></i> Nova Conversa
+                </button>
+                <button id="profile-btn" class="action-btn">
+                    <i class="fas fa-user-cog"></i> Perfil
+                </button>
+            </div>
+            
+            <div class="chat-list-container">
+                <div class="chat-list-header">
+                    <h3>Conversas Recentes</h3>
+                </div>
+                <div id="chat-list" class="chat-list">
+                    <!-- Lista de chats gerada dinamicamente pelo JS -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="action-btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <h2 id="current-chat-title">Novo Chat</h2>
+                </div>
+                <div class="chat-actions">
+                    <button id="edit-title-btn" class="icon-btn" title="Renomear conversa">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button id="delete-chat-btn" class="icon-btn" title="Excluir conversa">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="chat-messages" class="chat-messages">
+                <!-- Mensagens geradas pelo JS -->
+            </div>
+            
+            <div class="chat-input-container">
+                <form id="chat-form">
+                    <div class="input-wrapper">
+                        <textarea id="chat-input" placeholder="Digite sua mensagem" rows="1"></textarea>
+                        <button type="submit" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-info">
+                        <small>Pressione Enter para enviar, Shift+Enter para quebra de linha</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para renomear chat -->
+    <div id="rename-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Renomear Conversa</h3>
+                <button class="btn-close">×</button>
+            </div>
+            <form id="rename-form">
+                <div class="form-group">
+                    <label for="chat-title">Novo título</label>
+                    <input type="text" id="chat-title" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para perfil do usuário -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Meu Perfil</h3>
+                <button class="btn-close">×</button>
+            </div>
+            <div class="modal-tabs">
+                <div class="tab active" data-tab="profile-tab">Dados Pessoais</div>
+                <div class="tab" data-tab="plan-tab">Meu Plano</div>
+            </div>
+            <div class="tab-content" id="profile-tab">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="profile-username">Nome de Usuário</label>
+                        <input type="text" id="profile-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">Email</label>
+                        <input type="email" id="profile-email" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <h4>Alterar Senha</h4>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-current-password">Senha Atual</label>
+                        <input type="password" id="profile-current-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-new-password">Nova Senha</label>
+                        <input type="password" id="profile-new-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-confirm-password">Confirmar Nova Senha</label>
+                        <input type="password" id="profile-confirm-password" class="form-control">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn modal-cancel">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-content" id="plan-tab" style="display: none;">
+                <div class="plan-info">
+                    <!-- Informações do plano serão preenchidas via JavaScript -->
+                </div>
+                <div class="plan-usage">
+                    <h4>Histórico de Uso</h4>
+                    <div class="usage-history">
+                        <!-- Será preenchido via JavaScript -->
+                        <div class="no-data">O histórico de uso será exibido aqui.</div>
+                    </div>
+                </div>
+                <div class="plan-upgrade">
+                    <h4>Atualize seu Plano</h4>
+                    <div class="plans-container">
+                        <div class="plan-card">
+                            <div class="plan-name">Básico</div>
+                            <div class="plan-price">Grátis</div>
+                            <div class="plan-tokens">10.000 tokens/mês</div>
+                            <div class="plan-features">
+                                <div class="plan-feature">Acesso básico</div>
+                                <div class="plan-feature">Sem suporte prioritário</div>
+                            </div>
+                            <button class="btn btn-secondary" disabled>Plano Atual</button>
+                        </div>
+                        <div class="plan-card">
+                            <div class="plan-name">Premium</div>
+                            <div class="plan-price">R$29,90/mês</div>
+                            <div class="plan-tokens">100.000 tokens/mês</div>
+                            <div class="plan-features">
+                                <div class="plan-feature">Acesso a todas funcionalidades</div>
+                                <div class="plan-feature">Suporte prioritário</div>
+                            </div>
+                            <button class="btn btn-primary">Fazer Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="public/assets/js/chat.js"></script>
+</body>
+</html> 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEXIA - Assistente de IA</title>
+    <link rel="stylesheet" href="public/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <img src="public/assets/images/logo.svg" alt="Logo" class="logo">
+            <h1><span class="green-text">FEX</span>IA</h1>
+            <p>Seu assistente de IA personalizado</p>
+        </div>
+        
+        <div class="login-form">
+            <h2>Acessar Conta</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="username" name="username" placeholder="Digite seu email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Lembrar-me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+            
+            <div class="login-info">
+                <p><i class="fas fa-info-circle"></i> <strong>Credenciais de Teste:</strong></p>
+                <p><i class="fas fa-user-shield"></i> Admin: <strong>admin@fexia.com</strong> / Senha: <strong>admin123</strong></p>
+                <p><i class="fas fa-user"></i> Usuário: <strong>teste@fexia.com</strong> / Senha: <strong>teste123</strong></p>
+            </div>
+            
+            <p class="register-link">Não tem uma conta? <a href="#" id="register-toggle">Registre-se <i class="fas fa-arrow-right"></i></a></p>
+        </div>
+
+        <div class="register-form" style="display: none;">
+            <h2>Criar Conta</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-username"><i class="fas fa-user"></i> Usuário</label>
+                    <input type="text" id="reg-username" name="reg-username" placeholder="Escolha um nome de usuário" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="reg-email" name="reg-email" placeholder="Digite seu email" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" id="reg-password" name="reg-password" placeholder="Crie uma senha (mín. 6 caracteres)" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password"><i class="fas fa-check-circle"></i> Confirmar Senha</label>
+                    <input type="password" id="reg-confirm-password" name="reg-confirm-password" placeholder="Digite a senha novamente" required>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+            </form>
+            <p class="login-link">Já tem uma conta? <a href="#" id="login-toggle"><i class="fas fa-arrow-left"></i> Faça login</a></p>
+        </div>
+    </div>
+
+    <script src="public/assets/js/auth-supabase.js"></script>
+</body>
+</html> 

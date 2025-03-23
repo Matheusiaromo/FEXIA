@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEXIA - Meu Perfil</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="logo">
+            <img src="assets/img/fexia-logo.png" alt="FEXIA Logo">
+            <span>FEXIA</span>
+        </div>
+        <div class="user-menu">
+            <a href="chat.html" class="btn btn-outline"><i class="fas fa-comment"></i> Voltar ao Chat</a>
+            <button id="logout-button" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </header>
+    
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <section class="profile-section">
+            <h1>Meu Perfil</h1>
+            
+            <!-- Dados do Perfil -->
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-row">
+                        <span class="label">Nome de Usuário:</span>
+                        <span id="profile-username" class="value">usuário</span>
+                    </div>
+                    <div class="profile-row">
+                        <span class="label">Email:</span>
+                        <span id="profile-email" class="value">email@exemplo.com</span>
+                    </div>
+                    <div class="profile-row">
+                        <span class="label">Tipo de Conta:</span>
+                        <span id="profile-role" class="value">Assinante</span>
+                    </div>
+                    <div class="profile-row">
+                        <span class="label">Plano:</span>
+                        <span id="profile-plan" class="value">Básico</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button id="edit-profile-btn" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Editar Perfil
+                    </button>
+                    <button id="change-password-btn" class="btn btn-secondary">
+                        <i class="fas fa-key"></i> Alterar Senha
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Uso de Tokens -->
+            <div class="profile-card">
+                <h2><i class="fas fa-chart-line"></i> Uso de Tokens</h2>
+                <div class="token-usage">
+                    <div class="token-info">
+                        <span class="label">Tokens Utilizados:</span>
+                        <span id="token-count" class="value">0/5000</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="token-progress" class="progress-bar success"></div>
+                    </div>
+                    <p class="token-note">
+                        O uso de tokens é contabilizado por mês. Seu limite depende do seu plano de assinatura.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Modal de Edição de Perfil -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Perfil</h2>
+                <span id="close-edit-modal" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    <div class="form-group">
+                        <label for="edit-username">Nome de Usuário</label>
+                        <input type="text" id="edit-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input type="email" id="edit-email" class="form-control" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Alteração de Senha -->
+    <div id="change-password-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Alterar Senha</h2>
+                <span id="close-password-modal" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="change-password-form">
+                    <div class="form-group">
+                        <label for="current-password">Senha Atual</label>
+                        <input type="password" id="current-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Nova Senha</label>
+                        <input type="password" id="new-password" class="form-control" required>
+                        <small>A senha deve ter pelo menos 6 caracteres</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmar Senha</label>
+                        <input type="password" id="confirm-password" class="form-control" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Alterar Senha</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="assets/js/profile.js"></script>
+</body>
+</html> 

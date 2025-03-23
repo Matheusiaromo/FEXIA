@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEXIA - Painel Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/assets/css/style.css">
+    <link rel="stylesheet" href="public/assets/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <button id="toggle-sidebar" class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1><span class="green-text">FEX</span>IA</h1>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <img src="public/assets/images/avatar.svg" alt="Avatar">
+                </div>
+                <div class="user-details">
+                    <div class="username">Admin</div>
+                    <div class="admin-badge">Administrador</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" data-tab="users">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </div>
+                <div class="menu-item" data-tab="tokens">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Uso de Tokens</span>
+                </div>
+                <div class="menu-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="action-btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Painel Administrativo</h1>
+                </div>
+                <div class="user-actions">
+                    <button id="profile-btn" class="action-btn-outline">
+                        <i class="fas fa-user-cog"></i> Meu Perfil
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div class="content-tab active" id="dashboard-tab">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="total-users">0</div>
+                            <div class="stat-label">Usuários Totais</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="active-users">0</div>
+                            <div class="stat-label">Usuários Ativos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="total-chats">0</div>
+                            <div class="stat-label">Conversas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="total-tokens">0</div>
+                            <div class="stat-label">Tokens Utilizados</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-card wide-card">
+                        <div class="card-header">
+                            <h2>Uso de Tokens (Últimos 30 dias)</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="tokens-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Usuários por Plano</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="plans-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Usuários Recentes</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="recent-users" id="recent-users-list">
+                                <div class="loading-indicator">Carregando...</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" id="view-all-users">Ver Todos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Users Tab -->
+            <div class="content-tab" id="users-tab">
+                <div class="tab-header">
+                    <h2>Gerenciamento de Usuários</h2>
+                    <div class="tab-actions">
+                        <div class="search-box">
+                            <input type="text" id="user-search" placeholder="Pesquisar usuários...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button class="btn btn-primary" id="add-user-btn">
+                            <i class="fas fa-plus"></i> Novo Usuário
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="users-list-container">
+                    <table class="data-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuário</th>
+                                <th>Email</th>
+                                <th>Plano</th>
+                                <th>Status</th>
+                                <th>Tokens</th>
+                                <th>Data de Criação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Será preenchido pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="users-pagination">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Tokens Tab -->
+            <div class="content-tab" id="tokens-tab">
+                <div class="tab-header">
+                    <h2>Uso de Tokens</h2>
+                    <div class="tab-actions">
+                        <div class="filter-group">
+                            <select id="token-month-filter">
+                                <option value="all">Todos os meses</option>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                            <select id="token-year-filter">
+                                <!-- Será preenchido pelo JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tokens-list-container">
+                    <table class="data-table" id="tokens-table">
+                        <thead>
+                            <tr>
+                                <th>Usuário</th>
+                                <th>Plano</th>
+                                <th>Mês</th>
+                                <th>Tokens Usados</th>
+                                <th>Limite</th>
+                                <th>Utilização</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tokens-table-body">
+                            <!-- Será preenchido pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="tokens-pagination">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div class="content-tab" id="settings-tab">
+                <div class="tab-header">
+                    <h2>Configurações do Sistema</h2>
+                </div>
+                
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3>Configurações de Planos</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="plans-settings-form">
+                                <div class="setting-group">
+                                    <h4>Plano Básico</h4>
+                                    <div class="form-group">
+                                        <label for="basic-plan-tokens">Limite de Tokens</label>
+                                        <input type="number" id="basic-plan-tokens" class="form-control" value="10000">
+                                    </div>
+                                </div>
+                                
+                                <div class="setting-group">
+                                    <h4>Plano Premium</h4>
+                                    <div class="form-group">
+                                        <label for="premium-plan-tokens">Limite de Tokens</label>
+                                        <input type="number" id="premium-plan-tokens" class="form-control" value="100000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="premium-plan-price">Preço (R$)</label>
+                                        <input type="number" id="premium-plan-price" class="form-control" value="29.90" step="0.01">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <div class="card-header">
+                            <h3>Configurações do Sistema</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="system-settings-form">
+                                <div class="form-group">
+                                    <label for="system-name">Nome do Sistema</label>
+                                    <input type="text" id="system-name" class="form-control" value="FEXIA">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="system-welcome-message">Mensagem de Boas-vindas</label>
+                                    <textarea id="system-welcome-message" class="form-control" rows="3">Como posso ajudar você hoje?</textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="system-max-sessions">Sessões máximas por usuário</label>
+                                    <input type="number" id="system-max-sessions" class="form-control" value="5">
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de usuário -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="user-modal-title">Adicionar Usuário</h2>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <input type="hidden" id="user-id">
+                    
+                    <div class="form-group">
+                        <label for="username">Nome de Usuário</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" class="form-control">
+                        <span class="form-hint">Deixe em branco para manter a senha atual (ao editar)</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Função</label>
+                        <select id="role" class="form-control">
+                            <option value="subscriber">Assinante</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control">
+                            <option value="active">Ativo</option>
+                            <option value="inactive">Inativo</option>
+                            <option value="suspended">Suspenso</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subscription-plan">Plano</label>
+                        <select id="subscription-plan" class="form-control">
+                            <option value="basic">Básico</option>
+                            <option value="standard">Standard</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary modal-cancel">Cancelar</button>
+                <button type="submit" form="user-form" class="btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmação</h2>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-content" id="confirm-message">
+                    Tem certeza que deseja realizar esta ação?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary modal-cancel">Cancelar</button>
+                <button id="confirm-action" class="btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="public/assets/js/admin.js"></script>
+</body>
+</html> 
